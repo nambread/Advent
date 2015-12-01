@@ -31,7 +31,7 @@ function TheseDirectionsAreSilly(string, charaMap) {
     while (value > -1) {
         value += charaMap[string[index++]];
     }
-    return --index;
+    return index;
 }
 
 //Calculate solution to the second problem:
