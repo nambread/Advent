@@ -16,21 +16,22 @@ DeepThought.prototype.getNextPresent = function (){
     var dimensions;
     var match = this.getPresentReg.exec(this.input);
     dimensions = !(match) ? null : [parseInt(match[2], 10), parseInt(match[3], 10), parseInt(match[4], 10)];
-    //console.log(dimensions)
     return dimensions
 }
 
 DeepThought.prototype.calculateAreaNeeded = function (dimensions) {
-    var paper = 2 * dimensions[0] * dimensions[1] + 2 * dimensions[1] * dimensions[2] + 2 * dimensions[2] * dimensions[0];
-    console.log(dimensions)
-    dimensions.splice(dimensions.lastIndexOf(Math.max(dimensions[0], dimensions[1], dimensions[2])), 1);
-    var slack = dimensions[0] * dimensions[1];
-    return paper+slack
+    var surfaceArea = 2 * dimensions[0] * dimensions[1] + 2 * dimensions[1] * dimensions[2] + 2 * dimensions[2] * dimensions[0];
+    return surfaceArea
 }
 
 DeepThought.prototype.calculateRibbonNeeded = function (dimensions) {
-    console.log(dimensions);
-    return 0
+    var bigAssBow = dimensions[0] * dimensions[1] * dimensions[2];
+    return bigAssBow
+}
+
+DeepThought.prototype.findSmallestSide = function (dimensions) {
+    dimensions.splice(dimensions.lastIndexOf(Math.max(dimensions[0], dimensions[1], dimensions[2])), 1);
+    return dimensions
 }
 
 DeepThought.prototype.theQuestion = function (){
@@ -42,14 +43,20 @@ DeepThought.prototype.theQuestion = function (){
 window.onload = function () {
     var input = document.getElementById("input").innerText;
     //Calculate solution to the first problem:
-    var output1 = document.createElement("p")
     var answers = (function (input) {
         var dp = new DeepThought(input);
         while (present = dp.getNextPresent()) {
             dp.lotsOfPaper += dp.calculateAreaNeeded(present);
+            dp.lotsOfRibbon += dp.calculateRibbonNeeded(present);
+            //moved the splice out of the first function, since it affects the present var
+            //used in the loop.
+            var smallestSide = dp.findSmallestSide(present);
+            dp.lotsOfPaper += smallestSide[0] * smallestSide[1];
+            dp.lotsOfRibbon += smallestSide[0] * 2 + smallestSide[1] * 2;
         }
-        return [dp.lotsOfPaper, dp.lotsOfRibbon];
+        return {"paperNeeded":dp.lotsOfPaper,"ribbonNeeded": dp.lotsOfRibbon};
     })(input);
-    //Output answer
-    document.body.appendChild(output1);
+    console.log(answers.paperNeeded+" sq. ft of paper needed! Golly.")
+    console.log(answers.ribbonNeeded+" ft of ribbon needed! Gosh.")
+
 }
