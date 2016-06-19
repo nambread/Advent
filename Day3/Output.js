@@ -19,11 +19,14 @@ var Neighbourhood = function () {
 }
 
 Neighbourhood.prototype.goDirection = function (direction, buildHouses) {
-    var nextHouse = this.housesGrid[this.currentHouse.x+direction.x][this.currentHouse.y+direction.y];
+    var _x = this.currentHouse.x + direction.x
+    var _y = this.currentHouse.y + direction.y
+
+    var nextHouse = this.housesGrid[_x][_y];
     if (!(nextHouse) && buildHouses) {
-        nextHouse = this.buildHouse({x:(this.currentHouse.x+direction.x),y:(this.currentHouse.y+direction.y)})
+        nextHouse = this.buildHouse({x:_x,y:_y})
     } else {
-        nextHouse = this.housesGrid[this.currentHouse.x + direction.x][this.currentHouse.y + direction.y]
+        return null
     }
     this.currentHouse = nextHouse;
     return nextHouse;
