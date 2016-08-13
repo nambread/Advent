@@ -19,6 +19,8 @@ var Neighbourhood = function () {
 }
 
 Neighbourhood.prototype.goDirection = function (direction, buildHouses) {
+  //FIXME this can give a direction < 0, which means trying to access a negative index on the internal arrays.
+    //it's where I got stuck last time.
     var _x = this.currentHouse.x + direction.x
     var _y = this.currentHouse.y + direction.y
 
@@ -80,4 +82,3 @@ window.onload = function () {
     var santa = new Santa();
     santa.startDelivery(input);
 }
- 
